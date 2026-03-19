@@ -67,6 +67,11 @@ if rf2.apiVersion >= 12.08 then
     fields[#fields + 1] = { t = "Deadband filter",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_dynamic_deadband_filter }
 end
 
+if rf2.apiVersion >= 12.09 then
+    incY(lineSpacing * 0.5)
+    fields[#fields + 1] = { t = "Cyclic ring",         x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.cyclic_ring }
+end
+
 local function receivedRcTuning(page)
     rf2.onPageReady(page)
 end
@@ -77,8 +82,10 @@ return {
         rf2.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
-        rf2.useApi("mspRcTuning").write(rcTuning)
-        rf2.settingsSaved(true, false)
+        if rcTuning.rates_type.value then
+            rf2.useApi("mspRcTuning").write(rcTuning)
+            rf2.settingsSaved(true, false)
+        end
     end,
     title       = "Rate Dynamics",
     labels      = labels,

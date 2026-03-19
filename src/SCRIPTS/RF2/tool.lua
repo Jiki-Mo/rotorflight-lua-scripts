@@ -8,13 +8,10 @@ if scriptsCompiled then
     --print("RF2: Before rf2.lua: ", collectgarbage("count") * 1024)
     assert(loadScript("rf2.lua"))()
     --rf2.showMemoryUsage("rf2 loaded")
-    rf2.radio = rf2.executeScript("radios").msp
-    --rf2.showMemoryUsage("radios loaded")
+    rf2.radio = rf2.executeScript("radios")
     rf2.mspQueue = rf2.executeScript("MSP/mspQueue")
-    --rf2.showMemoryUsage("MSP queue loaded")
     rf2.mspQueue.maxRetries = 3
     rf2.mspHelper = rf2.executeScript("MSP/mspHelper")
-    --rf2.showMemoryUsage("MSP helper loaded")
 
     local canUseLvgl = rf2.executeScript("F/canUseLvgl")()
     if canUseLvgl then
@@ -27,7 +24,8 @@ if scriptsCompiled then
     else
         run = rf2.executeScript("ui_lcd")
     end
-    --rf2.showMemoryUsage("ui loaded")
+
+    rf2.isTool = true
 else
     run = assert(loadScript("COMPILE/compile.lua"))()
     collectgarbage()

@@ -1,4 +1,5 @@
 local lvglHelper = rf2.executeScript("LVGL/helper")
+local saving = false
 
 local function show(page)
     lvgl.clear()
@@ -21,7 +22,8 @@ local function show(page)
     end
 
     local children = {}
-    for i, label in ipairs(page.labels) do
+    for i = 1, #page.labels do
+        local label = page.labels[i]
         children[#children + 1] = {
             type = "label",
             x = label.x,
@@ -32,7 +34,10 @@ local function show(page)
         }
     end
 
-    for i, field in ipairs(page.fields) do
+    local screenMult = rf2.radio.screenMult or 1
+
+    for i = 1, #page.fields do
+        local field = page.fields[i]
         if field.t then
             children[#children + 1] = {
                 type = "label",
@@ -47,7 +52,7 @@ local function show(page)
                 type = "button",
                 x = field.x,
                 y = field.y,
-                w = field.w or 200,
+                w = (field.w or 200) * screenMult,
                 text = function()
                     local s = string.gsub(field.t, "[%[%]]", "") -- remove brackets around [button]
                     return  s
@@ -70,7 +75,7 @@ local function show(page)
                     type = "textEdit",
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 125,
+                    w = (field.w or 125) * screenMult,
                     value = field.data.value,
                     length = field.data.max or 10,
                 }
@@ -97,7 +102,7 @@ local function show(page)
                     values = choiceTable.values,
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 100,
+                    w = (field.w or 100) * screenMult,
                     get = function() return choiceTable:getChoiceKey(field.data.value) end,
                     set = function(val)
                         field.data.value = choiceTable:getOriginalKey(val)
@@ -111,7 +116,7 @@ local function show(page)
                     type = "numberEdit",
                     x = field.sp or field.x,
                     y = field.y,
-                    w = field.w or 75,
+                    w = (field.w or 75) * screenMult,
                     get = function()
                         return field.data.value / (field.data.mult or 1)
                     end,
@@ -135,20 +140,8 @@ local function show(page)
         end
     end
 
-    if page.isReady and not page.readOnly then
-        children[#children + 1] = {
-            type = "button",
-            x = 5,
-            y = children[#children].y + 35,
-            w = LCD_W - 20,
-            text = "Save",
-            press = function()
-                page:write()
-            end,
-        }
-    end
-
-    for _, child in ipairs(children) do
+    for i = 1, #children do
+        local child = children[i]
         child.x = child.x * 1.75
         child.y = (child.y - rf2.radio.yMinLimit + 5) * 1.75
     end
@@ -157,7 +150,12 @@ local function show(page)
         {
             type = "page",
             title = "Rotorflight " .. rf2.luaVersion,
-            subtitle = page.title,
+            subtitle = function()
+                if rf2.widget and rf2.widget.options then
+                    return page.title .. " - " .. rf2.widget.options:getText()
+                end
+                return page.title
+            end,
             icon = rf2.baseDir .. "rf2.png",
             back = function()
                 if page.back then
@@ -165,8 +163,27 @@ local function show(page)
                 end
             end,
             children = children
-        },
+        }
     }
+
+    if page.isReady and not page.readOnly then
+        saving = false
+        lyt[#lyt + 1] = {
+            type = "button",
+            x = LCD_W - 100 * screenMult,
+            y = 5 * screenMult,
+            w = 95 * screenMult,
+            h = 34 * screenMult,
+            text = "Save",
+            active = function()
+                return not saving
+            end,
+            press = function()
+                saving = true
+                page:write()
+            end,
+        }
+    end
 
     lvgl.build(lyt)
 end

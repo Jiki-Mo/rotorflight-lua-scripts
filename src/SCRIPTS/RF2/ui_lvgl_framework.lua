@@ -16,13 +16,17 @@ local PageFiles = nil
 local Page = nil
 local CurrentPageIndex = -1
 
+ui.exit = function()
+    ui.state = ui.status.exit
+end
+
 ui.refresh = function()
     ui.previousState = nil
 end
 
 ui.setWaitMessage = function(message)
     local title = Page and Page.title or ""
-    waitMessage.setWaitMessage(title, message)
+    waitMessage.setWaitMessage(title, message, ui.exit)
 end
 
 ui.clearWaitMessage = function()
@@ -49,7 +53,7 @@ ui.showMainMenu = function()
         title = "Rotorflight " .. rf2.luaVersion,
         subtitle = "Main Menu",
         items = {},
-        back = function() ui.state = ui.status.exit end
+        back = ui.exit
     }
 
     local onMenuItemClick = function(index)
@@ -58,7 +62,8 @@ ui.showMainMenu = function()
         ui.loadPage()
     end
 
-    for i, page in ipairs(PageFiles) do
+    for i = 1, #PageFiles do
+        local page = PageFiles[i]
         local text = string.gsub(page.title, "^ESC %- ", "") -- remove leading 'ESC - ' from page title
         menu.items[#menu.items + 1] = {
             text = text,
@@ -119,13 +124,6 @@ ui.showPopupMenu = function()
     local menu = { title = "Menu", items = {} }
 
     if Page then
-        if not Page.readOnly then
-            menu.items[#menu.items + 1] = {
-                text = "Save",
-                click = function() Page:write() end
-            }
-        end
-
         menu.items [#menu.items + 1] = {
             text = "Reload",
             click = function() Page:read() end
@@ -188,6 +186,11 @@ end
 ui.onPageReady = function(page)
     page.isReady = true
     ui.showPage()
+end
+
+ui.restart = function()
+    ui.state = ui.status.init
+    ui.clearWaitMessage()
 end
 
 return ui

@@ -126,6 +126,7 @@ local mspRcTuningReplacements = {
         "SCRIPTS/RF2/MSP/RATES/NONE.lua",
         "SCRIPTS/RF2/MSP/RATES/QUICK.lua",
         "SCRIPTS/RF2/MSP/RATES/RACEFL.lua",
+        "SCRIPTS/RF2/MSP/RATES/ROTORFL.lua",
         "SCRIPTS/RF2/PAGES/rates.lua",
         "SCRIPTS/RF2/PAGES/rate_dynamics.lua"
     },
@@ -166,6 +167,7 @@ local mspRcTuningReplacements = {
     { ".yaw_dynamic_ceiling_gain", "[28]" },
     { ".yaw_dynamic_deadband_gain", "[29]" },
     { ".yaw_dynamic_deadband_filter", "[30]" },
+    { ".cyclic_ring", "[31]" },
 }
 
 local mspPidTuningReplacements = {
