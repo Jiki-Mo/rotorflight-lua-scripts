@@ -8,10 +8,17 @@ print("Minimizing script memory usage...")
 local genericReplacements = {
     {
         -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
-        files = "/SCRIPTS/RF2/",
+        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
         match = "--%[NIR",
         replace = "--%[NIR",
         replacement = "--[["
+    },
+    {
+        -- Replace rf2.call with pcall
+        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
+        match = "rf2%.call",
+        replace = "rf2%.call",
+        replacement = "pcall"
     },
     {
         -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
@@ -47,6 +54,13 @@ local genericReplacements = {
         files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua" },
         match = "%-%-.*",
         replace = "%-%-.*",
+        replacement = ""
+    },
+    {
+        -- Remove 'rf2.lcdNeedsInvalidate*' since it isn't used on EdgeTX/OpenTX
+        files = { "/SCRIPTS/RF2/" },
+        match = "rf2%.lcdNeedsInvalidate.*",
+        replace = "rf2%.lcdNeedsInvalidate.*",
         replacement = ""
     },
     {
@@ -168,6 +182,7 @@ local mspRcTuningReplacements = {
     { ".yaw_dynamic_deadband_gain", "[29]" },
     { ".yaw_dynamic_deadband_filter", "[30]" },
     { ".cyclic_ring", "[31]" },
+    { ".cyclic_polar", "[32]" },
 }
 
 local mspPidTuningReplacements = {

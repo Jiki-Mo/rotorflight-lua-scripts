@@ -15,6 +15,7 @@ addPage("showPidController", "PID Controller", "profile_pidcon", true)
 addPage("showProfileVarious", "Profile - Various", "profile_various", true)
 addPage("showProfileRescue", "Profile - Rescue", "profile_rescue", true)
 addPage("showProfileGovernor", "Profile - Governor", "profile_governor", true)
+addPage("showBattery", "Battery", "battery", true)
 addPage("showServos", "Servos", "servos", true)
 addPage("showMixer", "Mixer", "mixer", true)
 addPage("showGyroFilters", "Gyro Filters", "filters", true)
@@ -28,7 +29,7 @@ if rf2.apiVersion >= 12.07 then
     addPage("showPlatinumV5", "ESC - HW Platinum V5", "esc_hwpl5", false)
     addPage("showTribunus", "ESC - Scorpion Tribunus", "esc_scorp", false)
     if rf2.apiVersion >= 12.08 then
-        addPage("showXdfly", "ESC - XDFly", "esc_xdfly", false)
+        addPage("showXdfly", "ESC - XDFly/OMP/ZTW", "esc_xdfly", false)
     end
     addPage("showYge", "ESC - YGE", "esc_yge", false)
 

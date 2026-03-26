@@ -53,10 +53,11 @@ rf2 = {
         herz = " Hz",
         seconds = " s",
         milliseconds = " ms",
-        volt = "V",
+        volt = " V",
         celsius = " C",
         rpm = " RPM",
-        meters = " m"
+        meters = " m",
+        mah = " mAh"
     },
 
     --[NIR
@@ -131,5 +132,17 @@ rf2 = {
     isInteger = function(n)
         return type(n) == "number" and n == math.floor(n)
     end,
+
+    call = function(func, ...)
+        -- NOTE: 'rf2.call' will be replaced by 'pcall' in release builds, see minimize.lua.
+        -- This is done so all integration calls are protected.
+
+        -- Use unprotected calls during development, so errors surface immediately.
+        func(...)
+
+        -- Or use protected calls and show any errors afterwards.
+        -- local status, err = pcall(func, ...)
+        -- if not status then rf2.print(err) end
+    end
     --]]
 }

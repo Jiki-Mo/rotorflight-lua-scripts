@@ -16,13 +16,7 @@ local function setState(widget, state)
     widget:setState(state)
 end
 
---local lastHelloTime = nil
 local function run(widget)
-    -- if lastHelloTime == nil or rf2.clock() - lastHelloTime > 1 then
-    --     rf2.print("Background says hello!")
-    --     lastHelloTime = rf2.clock()
-    -- end
-
     if isInitialized and customTelemetryTask and not hasSensor("*Cnt") then
         isInitialized = false -- user probably deleted all sensors on TX
     elseif getRSSI() > 0 then
@@ -97,10 +91,7 @@ end
 -- widget is optional and will be provided by the RfTool widget.
 -- If the background script runs as a special function, widget will be nil.
 local function runProtected(widget)
-    local status, err = pcall(run, widget)
-    --[NIR
-    if not status then rf2.print(err) end
-    --]]
+    rf2.call(run, widget)
     --collectgarbage()
     --rf2.print("Mem: %d", collectgarbage("count")*1024)
     return 0
