@@ -1,5 +1,5 @@
 rf2 = {
-    luaVersion = "2.3.0-20260305",
+    luaVersion = "2.3.0-RC1",
     baseDir = "/SCRIPTS/RF2/",
     runningInSimulator = string.sub(select(2, getVersion()), -4) == "simu",
 
@@ -23,7 +23,7 @@ rf2 = {
     end,
 
     executeScript = function(scriptName, ...)
-        return assert(rf2.loadScript(scriptName))(...)
+        return assert(rf2.loadScript(scriptName), scriptName)(...)
     end,
 
     useApi = function(apiName)
@@ -132,6 +132,7 @@ rf2 = {
     isInteger = function(n)
         return type(n) == "number" and n == math.floor(n)
     end,
+    --]]
 
     call = function(func, ...)
         -- NOTE: 'rf2.call' will be replaced by 'pcall' in release builds, see minimize.lua.
@@ -144,5 +145,4 @@ rf2 = {
         -- local status, err = pcall(func, ...)
         -- if not status then rf2.print(err) end
     end
-    --]]
 }
